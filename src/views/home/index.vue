@@ -12,33 +12,26 @@
   </div>
 </template>
 
-
-
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { useWebsiteStore } from '@/store/modules/website'
 
-
-const websiteStore = useWebsiteStore();
+const websiteStore = useWebsiteStore()
 interface IWebsite {
-  websiteId: "1",
-  websiteName: "2",
-  websiteLogo: "3",
-  websiteUrl: "4",
+  websiteId: '1'
+  websiteName: '2'
+  websiteLogo: '3'
+  websiteUrl: '4'
 }
 
 let websiteList: IWebsite[] = reactive([])
 
 function getPageData() {
-  websiteStore.aGetWebsiteList().then(res => {
-    res.forEach(item => {
-      websiteList.push(item)
-    })
+  websiteStore.aGetWebsiteList().then((res) => {
+    console.log(res)
     console.log(websiteList)
   })
 }
 
-getPageData();
-
-
+getPageData()
 </script>

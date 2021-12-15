@@ -1,20 +1,20 @@
-import { getWebsiteList } from "@/api/website";
-import { defineStore } from "pinia";
+import { getWebsiteList } from '@/api/website'
+import { defineStore } from 'pinia'
 
 export interface IWebsiteState {
-  id: string;
-  name: string;
-  logo: string;
-  url: string;
+  id: string
+  name: string
+  logo: string
+  url: string
 }
 
 export const useWebsiteStore = defineStore({
-  id: "store-website",
+  id: 'store-website',
   state: (): IWebsiteState => ({
-    id: "",
-    name: "",
-    logo: "",
-    url: "",
+    id: '',
+    name: '',
+    logo: '',
+    url: '',
   }),
 
   getters: {},
@@ -22,9 +22,10 @@ export const useWebsiteStore = defineStore({
   actions: {
     async aGetWebsiteList() {
       try {
-        const res = await getWebsiteList();
-        return Promise.resolve(res);
+        const res = await getWebsiteList()
+        console.log(res)
+        return Promise.resolve(res)
       } catch (e) {}
     },
   },
-});
+})

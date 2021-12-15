@@ -16,6 +16,7 @@
       :native-scrollbar="false"
       :inverted="state.inverted"
     >
+      <div class="page-logo">这里是logo</div>
       <Menu></Menu>
     </n-layout-sider>
     <n-layout>
@@ -27,15 +28,14 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { MainView } from '@/components/Main';
+import { reactive } from "vue"
+import { MainView } from "@/components/Main"
 
-import Menu from '@/components/Menu/index.vue'
+import Menu from "@/components/Menu/index.vue"
 
 const state = reactive({
-  inverted: true
+  inverted: true,
 })
-
 </script>
 
 <style lang="scss" scoped>
