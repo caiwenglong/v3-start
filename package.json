@@ -12,10 +12,12 @@
     "lodash-es": "^4.17.21",
     "qs": "^6.10.1",
     "vue": "^3.2.16",
+    "vue-grid-layout": "^3.0.0-beta1",
     "vue-router": "^4.0.12"
   },
   "devDependencies": {
     "@vicons/ionicons5": "^0.11.0",
+    "@vicons/utils": "^0.1.4",
     "@vitejs/plugin-vue": "^1.9.3",
     "naive-ui": "^2.21.2",
     "pinia": "^2.0.6",

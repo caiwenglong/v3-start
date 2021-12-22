@@ -1,0 +1,16 @@
+
+@mixin vertical_middle {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@mixin vartical_center(){
+  @include vertical_middle;
+  text-align: center;
+    &::after {
+      content: '';
+      width: 0;
+      height: 100%;
+      @include vertical_middle;
+    }
+}

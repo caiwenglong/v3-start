@@ -42,4 +42,9 @@ const state = reactive({
 .page-layout {
   height: 100%;
 }
+
+.n-layout-content {
+  height: 100%;
+  background-color: #f5f5f7;
+}
 </style>

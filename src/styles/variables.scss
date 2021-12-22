@@ -1,1 +1,7 @@
-$white: #fff
+@import 'mixin.scss';
+$scaleMultiple: 1; // 鼠标滑过缩放倍数
+
+// 颜色遍历
+$white: #fff;
+$black: #303030;
+$primaryColor: #18a058 // 网站主颜色

@@ -1,4 +1,4 @@
-import type { App } from "vue";
+import type { App } from "vue"
 import {
   create,
   NConfigProvider,
@@ -72,7 +72,9 @@ import {
   NTimePicker,
   NBackTop,
   NScrollbar,
-} from "naive-ui";
+  NEllipsis,
+  NGradientText,
+} from "naive-ui"
 
 const naive = create({
   components: [
@@ -147,9 +149,11 @@ const naive = create({
     NSpin,
     NTimePicker,
     NBackTop,
+    NEllipsis,
+    NGradientText,
   ],
-});
+})
 
 export function setupNaive(app: App<Element>) {
-  app.use(naive);
+  app.use(naive)
 }
