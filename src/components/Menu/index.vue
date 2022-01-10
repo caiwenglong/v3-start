@@ -1,5 +1,11 @@
 <template>
-  <n-menu @update:value="handleUpdateValue" :options="menuOptions" :inverted="state.inverted" />
+  <n-menu
+    @update:value="handleUpdateValue"
+    key-field="id"
+    label-field="name"
+    :options="menuOptions"
+    :inverted="state.inverted"
+  />
   <n-divider />
   <div class="menu-add">
     <n-button @click="openModal" color="#8a2be2">
@@ -42,11 +48,14 @@
 </template>
 
 <script setup lang="ts">
-import { useMessage } from "naive-ui"
 import { reactive } from "vue"
+import { useMessage } from "naive-ui"
 import { AddSharp } from "@vicons/ionicons5"
+import { useMenuStore } from "@/store/modules/menu"
+import { IMenu } from "./interface"
+import { renderIcon } from "@/utils"
 
-// const menuStore = useMenuStore()
+const menuStore = useMenuStore()
 
 const message = useMessage()
 
@@ -69,7 +78,7 @@ const formValue = reactive({
 })
 
 // 菜单项
-const menuOptions = []
+let menuOptions: IMenu[] = reactive([])
 
 const state = reactive({
   inverted: true,
@@ -77,14 +86,22 @@ const state = reactive({
 })
 
 const getMenuData = () => {
-  /* menuStore.aGetMenuList().then(res => {
-    console.log(res)
-  }) */
+  menuStore.aGetMenuList().then((res) => {
+    if (res && res.result && res.result.length) {
+      res.result.forEach((item) => {
+        const { icon } = item
+        item.icon = renderIcon(icon)
+        menuOptions.push(item)
+      })
+    }
+  })
 }
 
 getMenuData()
 
 const handleUpdateValue = (key, item) => {
+  console.log(key)
+  console.log(item)
   message.info("[onUpdate:value]: " + JSON.stringify(key))
   message.info("[onUpdate:value]: " + JSON.stringify(item))
 }

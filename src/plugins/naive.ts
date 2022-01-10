@@ -74,6 +74,9 @@ import {
   NScrollbar,
   NEllipsis,
   NGradientText,
+  NAnchor,
+  NAnchorLink,
+  NAffix,
 } from "naive-ui"
 
 const naive = create({
@@ -151,6 +154,9 @@ const naive = create({
     NBackTop,
     NEllipsis,
     NGradientText,
+    NAnchor,
+    NAnchorLink,
+    NAffix,
   ],
 })
 

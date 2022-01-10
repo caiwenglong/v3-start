@@ -9,7 +9,7 @@
 
 <template>
   <n-layout class="page-layout" has-sider>
-    <n-layout-sider
+    <!-- <n-layout-sider
       content-style="padding: 24px;"
       show-trigger="bar"
       bordered
@@ -18,7 +18,7 @@
     >
       <div class="page-logo">这里是logo</div>
       <Menu></Menu>
-    </n-layout-sider>
+    </n-layout-sider> -->
     <n-layout>
       <n-layout-content ref="content" content-style="padding: 24px;" :native-scrollbar="false">
         <MainView />

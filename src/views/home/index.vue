@@ -1,77 +1,73 @@
 <template>
   <div class="page-main">
-    <n-space vertical :size="spaceSize">
-      <div class="page-main-section">
-        <n-h2 prefix="bar" align-text>
-          <n-input
-            ref="inputSectionTitle"
-            v-if="isEditTitle"
-            v-model:value="sectionTitleValue"
-            placeholder="请输入标题, 按回车键进行确认"
-            clearable
-            autosize
-            class="section-title-input"
-            passively-activated
-            @blur="changeSectionTitle"
-            @keyup="changeSectionTitle"
-          />
-          <n-gradient-text v-else type="info">
-            <span class="section-title">{{ sectionTitleValue }}</span>
-            <n-icon class="section-title-icon" @click="editSectionTitle">
-              <CreateOutline />
-            </n-icon>
-          </n-gradient-text>
-        </n-h2>
-        <n-grid :x-gap="12" :y-gap="8" :cols="4">
-          <template v-for="i in 8">
-            <n-grid-item v-for="w in websiteList">
-              <a class="website-item green" :src="w.url">
-                <div class="item-logo">
-                  <span :style="{ backgroundColor: randomHex() }">我</span>
-                </div>
-                <div class="item-desc">
-                  <div class="item-title">{{ w.name }}</div>
-                  <div class="item-introduction">
-                    <n-ellipsis class="ellipsis" :line-clamp="2">
-                      住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
-                    </n-ellipsis>
-                  </div>
-                </div>
-              </a>
-            </n-grid-item>
-          </template>
-        </n-grid>
+    <n-spin size="large" :show="showSpin">
+      <template #description>加载数据中...</template>
+      <div class="page-main container" ref="pageMainContainer">
+        <n-space vertical :size="spaceSize">
+          <div v-for="sectionItem in sectionList" class="page-main-section">
+            <n-h2 prefix="bar" align-text>
+              <n-input
+                ref="inputSectionTitle"
+                v-if="sectionItem.isEditTitle"
+                v-model:value="sectionItem.name"
+                placeholder="请输入标题, 按回车键进行确认"
+                clearable
+                autosize
+                class="section-title-input"
+                passively-activated
+                @blur="changeSectionTitle(sectionItem, $event)"
+                @keyup="changeSectionTitle(sectionItem, $event)"
+              />
+              <n-gradient-text v-else type="info">
+                <span :id="sectionItem.id" class="section-title">{{ sectionItem.name }}</span>
+                <n-icon class="section-title-icon" @click="editSectionTitle(sectionItem)">
+                  <CreateOutline />
+                </n-icon>
+              </n-gradient-text>
+            </n-h2>
+            <n-grid :x-gap="12" :y-gap="8" :cols="4">
+              <template v-for="w in websiteList">
+                <template v-if="w.idCategory == sectionItem.id">
+                  <n-grid-item>
+                    <a class="website-item green" :src="w.url">
+                      <div class="item-logo">
+                        <span :style="{ backgroundColor: randomHex() }">我</span>
+                      </div>
+                      <div class="item-desc">
+                        <div class="item-title">{{ w.name }}</div>
+                        <div class="item-introduction">
+                          <n-ellipsis class="ellipsis" :line-clamp="2">
+                            住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
+                          </n-ellipsis>
+                        </div>
+                      </div>
+                    </a>
+                  </n-grid-item>
+                </template>
+              </template>
+            </n-grid>
+          </div>
+        </n-space>
       </div>
-      <div class="page-main-section">
-        <n-h2 prefix="bar" align-text>
-          <n-gradient-text type="info">
-            <span class="section-title">不常用</span>
-            <n-icon class="section-title-icon">
-              <CreateOutline />
-            </n-icon>
-          </n-gradient-text>
-        </n-h2>
-        <n-grid :x-gap="12" :y-gap="8" :cols="4">
-          <template v-for="i in 8">
-            <n-grid-item v-for="w in websiteList">
-              <a class="website-item green" :src="w.url">
-                <div class="item-logo">
-                  <span :style="{ backgroundColor: randomHex() }">我</span>
-                </div>
-                <div class="item-desc">
-                  <div class="item-title">{{ w.name }}</div>
-                  <div class="item-introduction">
-                    <n-ellipsis class="ellipsis" :line-clamp="2">
-                      住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
-                    </n-ellipsis>
-                  </div>
-                </div>
-              </a>
-            </n-grid-item>
-          </template>
-        </n-grid>
-      </div>
-    </n-space>
+    </n-spin>
+    <div style="width: 160px; float: right">
+      <n-anchor affix show-rail="false" :trigger-top="24" :top="88" style="z-index: 1" ignore-gap>
+        <template v-for="sectionItem in sectionList">
+          <n-anchor-link :title="sectionItem.name" @click="fnScrollTo(sectionItem.id)" />
+        </template>
+      </n-anchor>
+    </div>
+    <div>
+      <n-affix
+        class="add-menu"
+        position="absolute"
+        :bottom="40"
+        :trigger-bottom="60"
+        :listen-to="() => $refs.pageMainContainer"
+      >
+        <BtnCycle></BtnCycle>
+      </n-affix>
+    </div>
   </div>
 </template>
 
@@ -81,67 +77,101 @@ import { useWebsiteStore } from "@/store/modules/website"
 import { randomHex } from "@/utils"
 import { CreateOutline } from "@vicons/ionicons5"
 import { useMessage, useDialog } from "naive-ui"
+import { useMenuStore } from "@/store/modules/menu"
+import { IWebsite } from "./interface"
+import BtnCycle from "@/components/cell/btn-cycle.vue"
 
-interface IWebsite {
-  id: "1"
-  name: "2"
-  logo: "3"
-  url: "4"
-}
-
+const menuStore = useMenuStore()
 const message = useMessage()
 const dialog = useDialog()
 const websiteStore = useWebsiteStore()
 
 const spaceSize = ref(32)
 
-const isEditTitle = ref(false)
-
-let sectionTitleValue = ref(null)
-let sectionTitleValueOld = sectionTitleValue.value
+let showSpin = ref(false)
 
 let websiteList: IWebsite[] = reactive([])
+let sectionList: any[] = reactive([])
 
-function getPageData() {
+/**
+ * 获取网站列表
+ */
+function getWebsiteList() {
   websiteStore.aGetWebsiteList().then((res) => {
-    var resWebsiteList = res.websiteArrayList
+    var resWebsiteList = res.websiteList
     if (resWebsiteList && resWebsiteList.length) {
       resWebsiteList.forEach((website) => {
         websiteList.push(website)
       })
     }
+    showSpin.value = false
   })
 }
 
-const editSectionTitle = () => {
-  isEditTitle.value = true
+/**
+ * 获取菜单
+ */
+const getMenuData = () => {
+  menuStore.aGetMenuList().then((res) => {
+    if (res && res.result && res.result.length) {
+      res.result.forEach((item) => {
+        item.isEditTitle = false
+        sectionList.push(item)
+      })
+    }
+  })
 }
 
-const changeSectionTitle = (e) => {
+/**
+ * 是否是编辑状态
+ */
+const editSectionTitle = (sectionItem) => {
+  sectionItem.isEditTitle = true
+}
+
+/**
+ *  修改标题头
+ */
+const changeSectionTitle = (sectionItem, e) => {
   const isEnter = e.keyCode == 13
   const isBlur = e.type == "blur"
   if (isEnter) {
     dialog.warning({
       title: "修改标题",
-      content: `确定将标题改为${sectionTitleValue.value}`,
+      content: `确定将标题改为${sectionItem.name}`,
       positiveText: "确定",
       negativeText: "不确定",
       maskClosable: false,
       onPositiveClick: () => {
-        message.success("已经修改好了")
+        // message.success("已经修改好了")
+        menuStore.aUpdateTbMenu(sectionItem.id, sectionItem.name).then((res) => {
+          if (res.result === 1) {
+            message.success("标题修改成功")
+          }
+        })
       },
       onNegativeClick: () => {
-        message.error("不确定")
+        message.warning("取消修改标题！")
       },
     })
   }
-  if (isBlur) {
-    isEditTitle.value = false
+  if (!isEnter && isBlur) {
+    sectionItem.isEditTitle = false
   }
 }
 
+/**
+ * 瞄点滚动
+ */
+const fnScrollTo = (target) => {
+  document.getElementById(target)?.scrollIntoView({
+    behavior: "smooth",
+  })
+}
+
 onMounted(() => {
-  getPageData()
+  getMenuData()
+  getWebsiteList()
 })
 </script>
 
@@ -179,7 +209,6 @@ onMounted(() => {
   overflow: hidden;
   background-color: $white;
   border-radius: 18px;
-  width: 240px;
   height: 120px;
   white-space: normal;
   box-shadow: 2px 4px 12px rgb(0 0 0 / 8%);
@@ -225,5 +254,14 @@ onMounted(() => {
   height: 100px;
   display: block;
   background-color: blueviolet;
+}
+
+.n-spin-container {
+  width: 86%;
+}
+
+.add-menu {
+  font-size: 42px;
+  right: 40px;
 }
 </style>
